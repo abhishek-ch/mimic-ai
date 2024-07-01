@@ -3,15 +3,36 @@
 
 https://github.com/abhishek-ch/mimic-ai/assets/7579608/ec5cedb6-6a6f-43fc-8bda-2d9127640ade
 
+This repository provides the tools and code necessary for exploring MIMIC-IV data using Large Language Models (LLMs) and Open-WebUI, a web-based user interface for data exploration.
 
-This repository contains code for exploring MIMIC data using the LLM and Open-WebUI. Open-WebUI is a web-based user interface for exploring data.
+## Prerequisites
+
+Before you begin, ensure that the MIMIC-IV data is set up in DuckDB. Follow the instructions provided [here](https://github.com/MIT-LCP/mimic-code/blob/main/mimic-iv/buildmimic/duckdb/import_duckdb.sh).
 
 ## How to Run
 
+To run the application, execute the following command in your terminal:
+
 ```shell
-docker run -d -p 3100:8080 --add-host=host.docker.internal:host-gateway \
-  -v /Users/gmcjy/Documents/sourcecode/MIMIC_DATA/landing/2.0:/app/local_data \
+docker run -d -p 3000:8080 --add-host=host.docker.internal:host-gateway \
+  -v /path/to/local/MIMIC_DATA:/app/local_data \
   -v mimicai:/app/backend/data \
   -v ./db:/app/db \
-  --name mimicai --restart always mimicai:0.2
+  --name mimicai --restart always buntha/mimicai:latest
 ```
+Replace `/path/to/local/MIMIC_DATA` with the actual path to your local MIMIC data directory.
+
+## Access
+
+1. **Start the Docker Container**: Once the Docker container is running, you can access the user interface at [http://localhost:3000](http://localhost:3000).
+2. **Start Ollama Locally**: Ensure that Ollama is started locally. In future releases, a Docker Compose file will be provided to start Ollama automatically.
+3. **Login**: On your first visit, you will need to sign up and log in.
+4. **Set Up Workspace**:
+   - Navigate to the Workspace section.
+   - Select `Tools` -> `Open-WebUI`.
+   - Import tools from the `tools` folder.
+5. **Configure API Keys**: If you have API keys for other models, add them in the settings.
+6. **System Settings**: Go to `Settings` and configure the system settings. You can refer to a sample setting provided in `sample/system_settings.md`.
+7. **Start Exploring**: Create a new chat and begin exploring the MIMIC data.
+
+This detailed guide should help you set up and run MIMIC-AI seamlessly. For any additional information or troubleshooting, please raise bugs or issues in the repository.
