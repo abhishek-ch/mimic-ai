@@ -1,1 +1,5 @@
 /env.md
+/.venv/
+/db/mimic4.db
+.idea
+.venv

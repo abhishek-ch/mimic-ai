@@ -1,0 +1,72 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+  linting:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository 🛎️
+        uses: actions/checkout@v3
+      - name: Install Python 3.11 🐍
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+
+
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.11'
+
+      - name: Determine Docker tag
+        id: docker-tag
+        run: |
+          if [[ $GITHUB_REF == refs/heads/main ]]; then
+            echo "::set-output name=tag::latest"
+          elif [[ $GITHUB_REF == refs/heads/dev ]]; then
+            echo "::set-output name=tag::dev"
+          elif [[ $GITHUB_REF == refs/heads/test ]]; then
+            echo "::set-output name=tag::testing"
+          else
+            echo "Branch does not match any predefined tags. Exiting."
+            exit 1
+          fi
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: free disk space
+        run: |
+          sudo swapoff -a
+          sudo rm -f /swapfile
+          sudo apt clean
+          docker rmi $(docker image ls -aq)
+          df -h
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: ./
+          file: Dockerfile
+          push: true
+          tags: buntha/mimicai:${{ steps.docker-tag.outputs.tag }}
