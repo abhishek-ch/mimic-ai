@@ -22,6 +22,7 @@ docker run -d -p 3000:8080 --add-host=host.docker.internal:host-gateway \
 ```
 Replace `/path/to/local/MIMIC_DATA` with the actual path to your local MIMIC data directory.
 
+
 ## Access
 
 1. **Start the Docker Container**: Once the Docker container is running, you can access the user interface at [http://localhost:3000](http://localhost:3000).
@@ -36,3 +37,14 @@ Replace `/path/to/local/MIMIC_DATA` with the actual path to your local MIMIC dat
 7. **Start Exploring**: Create a new chat and begin exploring the MIMIC data.
 
 This detailed guide should help you set up and run MIMIC-AI seamlessly. For any additional information or troubleshooting, please raise bugs or issues in the repository.
+
+## Pipeline Integration
+1. You can ignore Tools and enable Pipeline
+2. Start the pipeline by starting docker [image](https://github.com/open-webui/pipelines/tree/main?tab=readme-ov-file#-quick-start-with-docker)
+3. Go to the open-webui and go to admin > Settings > Admin Settings > Pipelines
+4. Upload Pipeline by selecting the [pipeline file](pipelines/func_call_pipeline.py) from the pipelines folder
+5. Once loaded, update OPEN API url, key, task model and mimic duckdb path
+
+Once Pipeline is integrated, you need not to explain any tool explicitly. Just start the pipeline and it will automatically start the tools and provide the results.
+
+![](images/pipeline_sample.png)
